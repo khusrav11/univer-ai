@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ru" data-skin="kaznu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Univer AI — прототип</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="side">
+    <div class="logo">
+      <div class="logo-mark"><svg viewBox="0 0 32 32" fill="none"><path d="M9 7v10a7 7 0 0 0 14 0V7" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/><circle cx="16" cy="17" r="2.6" fill="#fff"/><path d="M25.5 4.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9z" fill="#fff"/></svg></div>
+      <div><b>Univer AI</b><small data-i="tagline">Раннее предупреждение · КазНУ</small></div>
+    </div>
+    <div>
+      <div class="side-label" data-i="role">Роль</div>
+      <div class="roles" id="roles"></div>
+      <div class="role-name" id="roleName" style="margin-top:8px"></div>
+    </div>
+    <div>
+      <div class="side-label" data-i="menu">Меню</div>
+      <nav class="nav" id="nav"></nav>
+    </div>
+    <div class="side-foot">
+      <div class="sync"><span class="pulse"></span><span><span data-i="sync">Синхронизация с univer.kaznu.kz</span><br><b style="color:var(--side-strong)" id="syncTime">только что</b></span></div>
+      <div style="color:var(--side-strong);font-weight:600" data-i="demo">Демо-прототип · все данные вымышлены</div>
+      <div style="opacity:.7" data-i="readonly">Режим только чтения · данные не покидают серверы университета</div>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+
+  <div class="main">
+    <header class="top">
+      <button class="tbtn burger" id="burger" aria-label="Меню"></button>
+      <div class="crumbs"><small id="crumbRole"></small><b id="crumbPage"></b></div>
+      <label class="search"><span id="searchIc"></span><input id="q" data-ph="search" placeholder="Поиск студента, дисциплины…"></label>
+      <div class="lang" id="lang"><button data-l="ru" class="on">RU</button><button data-l="kk">ҚАЗ</button></div>
+      <div class="wrap-rel">
+        <button class="tbtn" id="skinBtn" title="Скин"></button>
+        <div class="pop" id="skinPop"></div>
+      </div>
+      <div class="wrap-rel">
+        <button class="tbtn" id="bellBtn" title="Уведомления"></button>
+        <div class="pop" id="bellPop" style="width:360px"></div>
+      </div>
+      <div class="avatar" id="meAv">АС</div>
+    </header>
+    <main class="content" id="content"></main>
+  </div>
+</div>
+<div class="modal" id="modal"><div class="box" id="modalBox"></div></div>
+<div class="toasts" id="toasts"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
