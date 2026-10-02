@@ -158,7 +158,7 @@ const SCHED=[
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const initials=n=>n.split(' ').map(x=>x[0]).slice(0,2).join('');
-const fmt=(x,d=2)=>x.toFixed(d).replace('.',',');
+const fmt=(x,d=2)=>S.lang==='en'?x.toFixed(d):x.toFixed(d).replace('.',',');
 const riskLvl=r=>r>=.6?['danger','Высокий']:r>=.35?['warn','Средний']:['ok','Низкий'];
 const nbLvl=n=>n>=THR.l3?'danger':n>=THR.l2?'warn':n>=THR.l1?'notice':'ok';
 const lvlColor=l=>`var(--${l})`;
@@ -210,7 +210,7 @@ function animateIn(root=document){
 function toast(n){
   const [i,l]=kindMeta[n.k]||kindMeta.sys;
   const el=document.createElement('div');el.className='toast';
-  el.innerHTML=`<div class="ic ${l==='notice'?'':l}">${ic(i)}</div><div><b>${n.title}</b><p>${n.body}</p><small>${(n.ch||[]).join(' · ')} · ${t('now')}</small></div>`;
+  el.innerHTML=`<div class="ic ${l==='notice'?'':l}">${ic(i)}</div><div><b>${n.title}</b><p>${n.body}</p><small>${(n.ch||[]).join(' · ')} · <span>только что</span></small></div>`;
   $('#toasts').prepend(el);
   setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),400)},6000);
   if($$('.toast').length>3)$$('.toast').slice(3).forEach(x=>x.remove());
@@ -490,7 +490,7 @@ function openStudent(id){
       </div></div>
       <div class="card"><div class="card-h"><div class="ic">${ic('heart')}</div><h3>Добавить меру поддержки</h3></div>
         <div style="display:flex;flex-direction:column;gap:10px">
-          <select class="sel"><option>Консультация с куратором</option><option>Доп. занятия по дисциплине</option><option>Тьюторство</option><option>Встреча с родителями (с согласия)</option><option>Психологическая служба</option></select>
+                              <select class="sel"><option value="Консультация с куратором">Консультация с куратором</option><option value="Доп. занятия по дисциплине">Доп. занятия по дисциплине</option><option value="Тьюторство">Тьюторство</option><option value="Встреча с родителями (с согласия)">Встреча с родителями (с согласия)</option><option value="Психологическая служба">Психологическая служба</option></select>
           <div style="display:flex;gap:10px"><input class="inp" style="flex:1" value="Г. Каримова"><input class="inp" style="width:130px" type="date" value="2026-10-15"></div>
           <textarea class="inp" placeholder="Комментарий…"></textarea>
           <button class="btn pri" onclick="addPlan('${s.n}')">${ic('check')} Добавить в план</button>
@@ -502,7 +502,7 @@ function openStudent(id){
   $('#modal').classList.add('open');animateIn($('#modalBox'));
 }
 function closeModal(){$('#modal').classList.remove('open')}
-function addPlan(n){PLANS.unshift({id:Date.now(),st:'todo',who:n,what:$('#modalBox select').value,resp:$('#modalBox .inp').value,due:'15.10'});closeModal();toast({k:'sys',title:'Мера добавлена в план поддержки',body:n,ch:['Univer AI']})}
+function addPlan(n){PLANS.unshift({id:Date.now(),st:'todo',who:n,what:$('#modalBox select').value,resp:(v=>v===tr('Г. Каримова')?'Г. Каримова':v)($('#modalBox .inp').value),due:'15.10'});closeModal();toast({k:'sys',title:'Мера добавлена в план поддержки',body:n,ch:['Univer AI']})}
 
 PAGES.c_scen=()=>`
 <div class="sec-title"><div><h2>Сценарный анализ</h2><p>«Что будет, если…» — меняйте показатели и смотрите, как модель пересчитывает риск</p></div>
@@ -632,7 +632,7 @@ function drawThr(){
   $$('#thrRows input').forEach(i=>{i.max=mx;const p=(i.value-1)/(mx-1)*100;i.style.setProperty('--p',p+'%');$('#tv_'+i.dataset.l).textContent=`${THR[i.dataset.l]} Н/б · ${Math.round(THR[i.dataset.l]/mx*100)}%`});
   drawTpl();
 }
-function drawTpl(){const mx=+$('#maxNb').value||35;$('#tplPrev').textContent=$('#tpl').value.replace('{student}','Алихан').replace('{discipline}','Математическая статистика').replace('{count}',THR.l2).replace('{max}',mx).replace('{threshold}',Math.round(THR.l2/mx*100)+'%')}
+function drawTpl(){const mx=+$('#maxNb').value||35;$('#tplPrev').$('#tplPrev').textContent=tr($('#tpl').value).replace('{student}',tr('Алихан')).replace('{discipline}',tr('Математическая статистика')).replace('{count}',THR.l2).replace('{max}',mx).replace('{threshold}',Math.round(THR.l2/mx*100)+'%')}
 function drawRules(){
   $('#rules').innerHTML=RULES.map(r=>`<div class="rule ${r.on?'':'off'}"><div class="ic">${ic(r.ic)}</div><div style="min-width:0"><b style="font-size:14px">${r.name}</b><div class="muted" style="font-size:12.5px">Если ${r.cond}</div><div class="k">${r.to.map(x=>`<span class="tag t-notice">${ic('user',12)} ${x}</span>`).join('')}${r.ch.map(x=>`<span class="tag t-muted">${ic(chIc[x]||'bell',12)} ${x}</span>`).join('')}<span class="tag ${r.pr.startsWith('Высок')?'t-danger':r.pr==='Средний'?'t-warn':'t-muted'}">${r.pr}</span>${r.once?'<span class="tag t-ok">однократно</span>':''}</div></div><div class="r" style="display:flex;gap:8px;align-items:center"><button class="btn sm ghost">${ic('edit',14)}</button><button class="toggle ${r.on?'on':''}" data-id="${r.id}"></button></div></div>`).join('');
   $$('#rules .toggle').forEach(b=>b.onclick=()=>{const r=RULES.find(x=>x.id===+b.dataset.id);r.on=!r.on;drawRules();toast({k:'sys',title:r.on?'Правило включено':'Правило выключено',body:r.name,ch:['Журнал аудита']})});
@@ -724,7 +724,7 @@ document.addEventListener('click',e=>{
   const r=e.target.closest('[data-r]');if(r){const R=ROLES.find(x=>x.id===r.dataset.r);go(S.page==='overview'?'overview':R.pages[1][0],R.id);return}
   const p=e.target.closest('#nav [data-p]');if(p){go(p.dataset.p);return}
   const s=e.target.closest('[data-s]');if(s){S.skin=s.dataset.s;document.documentElement.dataset.skin=S.skin;try{localStorage.setItem('uai-skin',S.skin)}catch(_){}renderShell();$('#skinPop').classList.add('open');return}
-  const l=e.target.closest('[data-l]');if(l){S.lang=l.dataset.l;document.documentElement.lang=S.lang;$$('#lang button').forEach(b=>b.classList.toggle('on',b===l));renderShell();return}
+  const l=e.target.closest('[data-l]');if(l){S.lang=l.dataset.l;document.documentElement.lang=S.lang;$$('#lang button').forEach(b=>b.classList.toggle('on',b===l));try{localStorage.setItem('uai-lang',S.lang)}catch(_){}go(S.page);I18N.apply();return}
   if(e.target.closest('#skinBtn')){$('#skinPop').classList.toggle('open');$('#bellPop').classList.remove('open');return}
   if(e.target.closest('#bellBtn')){$('#bellPop').classList.toggle('open');$('#skinPop').classList.remove('open');return}
   if(e.target.closest('#readAll')){FEED.forEach(n=>n.unread=false);S.unread=0;renderShell();$$('.fi.unread').forEach(x=>x.classList.remove('unread'));return}
@@ -740,5 +740,7 @@ $('#q').addEventListener('input',()=>{if(S.page!=='c_dash'&&$('#q').value.length
 /* ================= INIT ================= */
 $('#burger').innerHTML=ic('menu');$('#skinBtn').innerHTML=ic('palette');$('#searchIc').innerHTML=ic('search',16);
 try{const sk=localStorage.getItem('uai-skin');if(sk&&SKINS.some(s=>s.id===sk)){S.skin=sk;document.documentElement.dataset.skin=sk}}catch(_){}
+try{const lg=localStorage.getItem('uai-lang');if(lg&&L[lg]){S.lang=lg;document.documentElement.lang=lg;$$('#lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===lg))}}catch(_){}
+I18N.start();
 go('overview');
 setTimeout(()=>toast({k:'sys',title:'Добро пожаловать в Univer AI',body:'Смените роль слева, а скин — кнопкой с палитрой вверху.',ch:['Демо']}),900);
