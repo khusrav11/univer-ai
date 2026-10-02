@@ -61,7 +61,15 @@ c_dash:'Тәуекелдер тақтасы',c_scen:'Сценарийлік та
 t_changes:'Кесте өзгерістері',t_week:'Менің сабақтарым',t_set:'Арналар',
 p_feed:'Студент бойынша лента',p_consent:'Студенттің келісімі',
 a_rules:'Ережелер мен шектер',a_chan:'Жеткізу арналары',a_stats:'Статистика',a_models:'iLearn модельдері',a_logs:'Журналдар',
-skin:'Интерфейс тақырыбы',notif:'Хабарламалар',all:'Барлығы',readAll:'Барлығын оқу',now:'жаңа ғана'}
+skin:'Интерфейс тақырыбы',notif:'Хабарламалар',all:'Барлығы',readAll:'Барлығын оқу',now:'жаңа ғана'},
+en:{tagline:'Early warning · KazNU',role:'Role',menu:'Menu',sync:'Sync with univer.kaznu.kz',readonly:'Read-only mode · data never leaves university servers',demo:'Demo prototype · all data is fictional',search:'Search student, course…',
+student:'Student',curator:'Curator (advisor)',teacher:'Teacher',parent:'Parent',admin:'Administrator',
+overview:'System overview',s_home:'Home',s_feed:'Notifications',s_att:'Attendance & grades',s_set:'Channels & consent',
+c_dash:'Risk dashboard',c_scen:'What-if analysis',c_plan:'Support plans',c_week:'Weekly summary',
+t_changes:'Schedule changes',t_week:'My classes',t_set:'Channels',
+p_feed:'Student feed',p_consent:'Student consent',
+a_rules:'Rules & thresholds',a_chan:'Delivery channels',a_stats:'Statistics',a_models:'iLearn models',a_logs:'Logs',
+skin:'Interface skin',notif:'Notifications',all:'All',readAll:'Mark all read',now:'just now'}
 };
 const t=k=>(L[S.lang]&&L[S.lang][k])||L.ru[k]||k;
 
@@ -716,7 +724,7 @@ document.addEventListener('click',e=>{
   const r=e.target.closest('[data-r]');if(r){const R=ROLES.find(x=>x.id===r.dataset.r);go(S.page==='overview'?'overview':R.pages[1][0],R.id);return}
   const p=e.target.closest('#nav [data-p]');if(p){go(p.dataset.p);return}
   const s=e.target.closest('[data-s]');if(s){S.skin=s.dataset.s;document.documentElement.dataset.skin=S.skin;try{localStorage.setItem('uai-skin',S.skin)}catch(_){}renderShell();$('#skinPop').classList.add('open');return}
-  const l=e.target.closest('[data-l]');if(l){S.lang=l.dataset.l;document.documentElement.lang=S.lang==='kk'?'kk':'ru';$$('#lang button').forEach(b=>b.classList.toggle('on',b===l));renderShell();return}
+  const l=e.target.closest('[data-l]');if(l){S.lang=l.dataset.l;document.documentElement.lang=S.lang;$$('#lang button').forEach(b=>b.classList.toggle('on',b===l));renderShell();return}
   if(e.target.closest('#skinBtn')){$('#skinPop').classList.toggle('open');$('#bellPop').classList.remove('open');return}
   if(e.target.closest('#bellBtn')){$('#bellPop').classList.toggle('open');$('#skinPop').classList.remove('open');return}
   if(e.target.closest('#readAll')){FEED.forEach(n=>n.unread=false);S.unread=0;renderShell();$$('.fi.unread').forEach(x=>x.classList.remove('unread'));return}
